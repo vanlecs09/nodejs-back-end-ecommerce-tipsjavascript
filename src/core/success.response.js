@@ -1,18 +1,20 @@
 'use strict'
 
+const { ReasonPhrases, StatusCodes } = require("../utils/httpStatusCode");
 
-const STATUSCODE = {
-    OK: 200,
-    CREATED: 201,
-}
 
-const REASONSTATUSCODE = {
-    OK: 'OK',
-    CREATEED: 'CREATED',
-}
+// const STATUSCODE = {
+//     OK: 200,
+//     CREATED: 201,
+// }
+
+// const REASONSTATUSCODE = {
+//     OK: 'OK',
+//     CREATEED: 'CREATED',
+// }
 
 class SuccessReponse {
-    constructor({ message, statusCode, reasonStatusCode, metadata }) {
+    constructor({ message, statusCode = StatusCodes.OK, reasonStatusCode = ReasonPhrases.OK, metadata }) {
         this.message = !message ? reasonStatusCode : message;
         this.status = statusCode;
         this.metadata = metadata;
@@ -24,13 +26,13 @@ class SuccessReponse {
 }
 
 class OK extends SuccessReponse {
-    constructor({ message = REASONSTATUSCODE.OK, metadata }) {
-        super({ message, statusCode: STATUSCODE.OK, metadata });
+    constructor({ message = ReasonPhrases.OK, metadata }) {
+        super({ message, statusCode: StatusCodes.OK, metadata });
     }
 }
 
 class CREATED extends SuccessReponse {
-    constructor({ options: { }, message = REASONSTATUSCODE.CREATEED, statusCode = STATUSCODE.CREATED, reasonStatusCode, metadata }) {
+    constructor({ options = {}, message = ReasonPhrases.CREATED, statusCode = StatusCodes.CREATED, reasonStatusCode, metadata }) {
         super({ message, statusCode, reasonStatusCode, metadata })
         this.options = options;
     }
@@ -38,5 +40,6 @@ class CREATED extends SuccessReponse {
 
 module.exports = {
     OK,
-    CREATED
+    CREATED,
+    SuccessReponse
 }
