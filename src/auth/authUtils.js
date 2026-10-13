@@ -36,7 +36,7 @@ const createTokenPair = async (payload, publicKey, privateKey) => {
     }
 }
 
-const authentication =  asyncHandler(async (req, res, next) => {
+const authentication = asyncHandler(async (req, res, next) => {
     /*
         1 - check userId missing 
         2 - get access Token
@@ -51,23 +51,31 @@ const authentication =  asyncHandler(async (req, res, next) => {
     //2
     const keyStore = await findByUserId(userId);
     if (!keyStore) throw new NotFoundError("Not Found Key Store");
-    
+
     // 
     const accessToken = await req.headers[HEADER.AUTHORIZATION];
     if (!accessToken) throw new AuthFailureError("Invalid Request");
 
-     try {
+    try {
         const decodeUser = JWT.verify(accessToken, keyStore.publicKey);
         if (userId !== decodeUser.userId) throw new AuthFailureError("Invalid UserId");
         req.keyStore = keyStore;
+        req.user = decodeUser; // {userId, email}
         return next();
     } catch (error) {
         throw new AuthFailureError("Invalid Token");
     }
 });
 
+const verifyJWT = async (token, keySecret) =>
+{
+    console.log("verifyJWT " + token)
+    return await JWT.verify(token, keySecret);
+}
+
 module.exports = {
     createTokenPair,
     HEADER,
-    authentication
+    authentication,
+    verifyJWT
 }
