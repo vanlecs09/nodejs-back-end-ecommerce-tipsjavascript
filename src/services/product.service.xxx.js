@@ -1,10 +1,11 @@
 const { BadRequestError } = require("../core/error.reponse");
 const { product, electronic, clothing, funiture: furniture } = require("../models/product.model");
-const { findAllDraftForShop, 
+const { findAllDraftForShop,
     findAllPublishedForShop,
-    publishProductByShop, 
-    unPublishProductByShop, 
-    searchProductByUser } = require("../models/repository/product.repo");
+    publishProductByShop,
+    unPublishProductByShop,
+    searchProductByUser,
+    findAllProducts } = require("../models/repository/product.repo");
 
 class ProductFactory {
 
@@ -14,11 +15,15 @@ class ProductFactory {
         ProductFactory.productRegistry[type] = classRef;
     }
 
-    static async createProduct(type, payLoad) {
+    static async createProduct(type, payload) {
         // console.log(payload);
         const productClass = ProductFactory.productRegistry[type];
         if (!productClass) throw new BadRequestError(`invalid product type ${type}`)
-        return new productClass(payLoad).createProduct();
+        return new productClass(payload).createProduct();
+    }
+
+    static async updateProduct(type, payload) {
+
     }
 
     static async findAllDraftForShop({ product_shop, limit = 50, skip = 0 }) {
@@ -40,7 +45,17 @@ class ProductFactory {
     }
 
     static async searchProducts({ keySearch }) {
-        return await searchProductByUser({keySearch})
+        return await searchProductByUser({ keySearch })
+    }
+
+    static async findAllProducts({ limit = 50, sort = 'ctime', page = 1, filter = { isPublished: true } }) {
+        return await findAllProducts({limit, sort, page, filter,
+            select:['product_name', 'product_price', 'product_thumb']
+        })
+    }
+
+    static async findProduct({product_id}) {
+        return await findProduct({product_id, unSelect: ['__v']})
     }
 }
 

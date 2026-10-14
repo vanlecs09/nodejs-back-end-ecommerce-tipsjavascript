@@ -4,7 +4,9 @@ const { asyncHandler } = require('../../helper/asynchandler');
 const { authentication } = require('../../auth/authUtils');
 const router = express.Router();
 
-router.get('/search/:keySearch', asyncHandler(ProductController.getListSearchProduct))
+router.get('/search/:keySearch', asyncHandler(ProductController.getListSearchProduct));
+router.get('', asyncHandler(ProductController.findAllProducts));
+router.get('/:product_id', asyncHandler(ProductController.findProduct));
 
 router.use(authentication);
 router.post('', asyncHandler(ProductController.createProduct));
