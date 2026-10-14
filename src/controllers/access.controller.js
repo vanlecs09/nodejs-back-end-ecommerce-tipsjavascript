@@ -24,9 +24,6 @@ class AccessController {
     }
 
     signUp = async (req, res, next) => {
-        // console.log(`[P]::singUp::`, req.body);
-        // return res.status(201).json(await AccessService.signUp(req.body))
-
         new CREATED({
             message: "register Ok",
             metadata: await AccessService.signUp(req.body),

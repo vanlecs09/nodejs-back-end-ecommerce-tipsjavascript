@@ -4,8 +4,14 @@ const { asyncHandler } = require('../../helper/asynchandler');
 const { authentication } = require('../../auth/authUtils');
 const router = express.Router();
 
+router.get('/search/:keySearch', asyncHandler(ProductController.getListSearchProduct))
 
 router.use(authentication);
 router.post('', asyncHandler(ProductController.createProduct));
-
+// router.post('')
+router.post('/published/:id', asyncHandler(ProductController.publishProductByShop));
+router.post('/unPublished/:id', asyncHandler(ProductController.unPublishProductByShop));
+// QUERY
+router.get('/draft/all', asyncHandler(ProductController.getAllDraftsForShop));
+router.get('/published/all', asyncHandler(ProductController.getAllPublishedForShop));
 module.exports = router;
