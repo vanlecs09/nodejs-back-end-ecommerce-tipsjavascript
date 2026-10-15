@@ -16,7 +16,7 @@ class KeyTokenService {
             // level 1
             const filter = { user: userId }, update = {
                 publicKey, privateKey, refeshTokenUsed: [], refreshToken
-            }, options = { upsert: true, new: true }
+            }, options = { upsert: true, returnDocument: 'after' }
             const tokens = await keyTokenModel.findOneAndUpdate(filter, update, options)
 
             return tokens ? tokens.publicKey : null;
