@@ -7,6 +7,7 @@ router.use(apiKey)
 // check permission (needs req.objKey set by apiKey)
 router.use(permission('0000'));
 router.use('/v1/api/shop/product', require('./product'));
+router.use('/v1/api/discount', require('./discount'));
 router.use('/v1/api', require('./access'));
 
 
