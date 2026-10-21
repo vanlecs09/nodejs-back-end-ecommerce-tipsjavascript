@@ -3,8 +3,8 @@
 const { converToObjectMongodb } = require("../../utils")
 const cartModel = require("../cart.model")
 
-const findCartByid = async (carId) => {
-    return await cartModel.findOne({ _id: converToObjectMongodb(cardId), cart_state: 'active' }).lean();
+const findCartByid = async (cartId) => {
+    return await cartModel.findOne({ _id: converToObjectMongodb(cartId), cart_state: 'active' }).lean();
 }
 
 module.exports = {

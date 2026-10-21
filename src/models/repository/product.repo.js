@@ -87,16 +87,16 @@ const getProductById = async (productId) => {
 }
 
 const checkProductByServer = async (products) => {
-    return await Promise.all(products.map( async product => {
+       const checkedProducts = await Promise.all(products.map(async product => {
         const foundProduct = await getProductById(product.productId);
-        if (foundProduct) {
-            return {
-                price : foundProduct.price,
-                quantity : foundProduct.quantity,
-                productId : foundProduct.productId
-            }
+        if (!foundProduct) return null;
+        return {
+            price: product.price,
+            quantity: product.quantity,
+            productId: product.productId
         }
-    }))
+    }));
+    return checkedProducts.filter(Boolean);
 }
 
 const queryProduct = async ({ query, skip, limit }) => {
