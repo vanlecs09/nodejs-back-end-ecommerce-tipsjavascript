@@ -55,31 +55,48 @@ const unPublishProductByShop = async ({ product_shop, product_id }) => {
 }
 
 const findAllProducts = async ({ limit, sort, page, filter, select }) => {
-    const skip = (page - 1)*limit;
-    const sortBy = sort == 'ctime' ? {_id: -1} : {_id : 1};
+    const skip = (page - 1) * limit;
+    const sortBy = sort == 'ctime' ? { _id: -1 } : { _id: 1 };
     const products = await product.find(filter)
-    .sort(sortBy)
-    .skip(skip)
-    .limit(limit)
-    .select(getSelectData(select))
-    .lean();
+        .sort(sortBy)
+        .skip(skip)
+        .limit(limit)
+        .select(getSelectData(select))
+        .lean();
 
     return products;
 }
 
-const findProduct = async ({product_id, unSelect}) => {
+const findProduct = async ({ product_id, unSelect }) => {
     return await product.findById(product_id).select(unGetSelectData(unSelect))
 }
 
-const updateProductById = async({
+const updateProductById = async ({
     productId,
     bodyUpdate,
-    model, 
+    model,
     isNew = true
 }) => {
     return model.findByIdAndUpdate(productId, bodyUpdate, {
         returnDocument: isNew ? 'after' : 'before'
     })
+}
+
+const getProductById = async (productId) => {
+    return await product.findById(productId).lean();
+}
+
+const checkProductByServer = async (products) => {
+    return await Promise.all(products.map( async product => {
+        const foundProduct = await getProductById(product.productId);
+        if (foundProduct) {
+            return {
+                price : foundProduct.price,
+                quantity : foundProduct.quantity,
+                productId : foundProduct.productId
+            }
+        }
+    }))
 }
 
 const queryProduct = async ({ query, skip, limit }) => {
@@ -100,5 +117,7 @@ module.exports = {
     searchProductByUser,
     findAllProducts,
     findProduct,
-    updateProductById
+    updateProductById,
+    checkProductByServer,
+    getProductById
 }
